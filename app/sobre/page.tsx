@@ -165,7 +165,7 @@ export default async function AboutPage() {
       <section className="py-24 max-w-7xl mx-auto px-6 lg:px-10 border-t border-primary/10">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
-            <div className="aspect-video rounded-xl overflow-hidden grayscale brightness-75 border border-primary/20 relative">
+            <div className="aspect-video rounded-xl overflow-hidden grayscale hover:grayscale-0 brightness-75 hover:brightness-100 border border-primary/20 relative transition-all duration-700 cursor-pointer group">
               <Image
                 alt="Nossa Cultura e Código de Ética - Santa Marta"
                 className="object-cover"
