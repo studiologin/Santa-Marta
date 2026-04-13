@@ -65,8 +65,8 @@ export default async function ContactPage() {
                       <p className="text-slate-400 mt-1"><a href={`tel:${content.phone.replace(/\D/g, '')}`} className="hover:text-primary transition-colors">{content.phone}</a></p>
                     ) : (
                       <>
-                        <p className="text-slate-400 mt-1"><a href="tel:+5571987203123" className="hover:text-primary transition-colors">Salvador - (071) 98720-3123</a></p>
-                        <p className="text-slate-400"><a href="tel:+5581992578686" className="hover:text-primary transition-colors">Recife - (081) 99257-8686</a></p>
+                        <p className="text-slate-400 mt-1"><a href="tel:+5571987203123" className="hover:text-primary transition-colors">Matriz: (071) 98720-3123</a></p>
+                        <p className="text-slate-400"><a href="tel:+5581992578686" className="hover:text-primary transition-colors">Filial Recife: (081) 99257-8686</a></p>
                       </>
                     )}
                   </div>
@@ -78,7 +78,7 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <p className="text-slate-100 text-lg font-semibold font-display">E-mail</p>
-                    <p className="text-slate-400 mt-1"><a href={`mailto:${content.email || 'vendas@santamartageo.com.br'}`} className="hover:text-primary transition-colors">{content.email || 'vendas@santamartageo.com.br'}</a></p>
+                    <p className="text-slate-400 mt-1"><a href={`mailto:${content.email || 'contato@santamartageossinteticos.com.br'}`} className="hover:text-primary transition-colors">{content.email || 'contato@santamartageossinteticos.com.br'}</a></p>
                   </div>
                 </div>
                 {/* Hours */}
