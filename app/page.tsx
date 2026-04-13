@@ -153,8 +153,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Video Section */}
-      <VideoSection videoId="2uU_WrANmxI" />
     </div>
   );
 }
