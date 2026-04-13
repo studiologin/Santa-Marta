@@ -588,6 +588,7 @@ export default function ConfiguracoesPage() {
                             </table>
                         </div>
                     </div>
+                )}
                 {activeTab === "redes-sociais" && (
                     <div className="bg-[#0d1b2a] rounded-[32px] border border-white/5 shadow-2xl overflow-hidden flex flex-col h-full max-w-2xl mx-auto w-full">
                         <div className="p-8 border-b border-white/5 bg-white/5">
