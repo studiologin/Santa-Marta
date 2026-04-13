@@ -21,11 +21,11 @@ export default function Home() {
             <span className="text-slate-500 uppercase tracking-[0.2em] text-[10px] font-bold">Projetos Concluídos</span>
           </div>
           <div className="p-8 flex flex-col items-center text-center border-l border-white/5">
-            <span className="text-primary text-4xl font-bold mb-1 font-industrial tracking-tighter">+200</span>
-            <span className="text-slate-500 uppercase tracking-[0.2em] text-[10px] font-bold">Clientes Ativos</span>
+            <span className="text-primary text-4xl font-bold mb-1 font-industrial tracking-tighter">+10.000</span>
+            <span className="text-slate-500 uppercase tracking-[0.2em] text-[10px] font-bold">Obras Atendidas</span>
           </div>
           <div className="p-8 flex flex-col items-center text-center border-l border-white/5">
-            <span className="text-primary text-4xl font-bold mb-1 font-industrial tracking-tighter">26</span>
+            <span className="text-primary text-4xl font-bold mb-1 font-industrial tracking-tighter">10</span>
             <span className="text-slate-500 uppercase tracking-[0.2em] text-[10px] font-bold">Estados Atendidos</span>
           </div>
         </div>

@@ -95,7 +95,7 @@ export default async function AboutPage() {
                 <span className="text-sm uppercase tracking-widest font-medium text-slate-500">Anos de Experiência</span>
               </div>
               <div>
-                <span className="block text-4xl font-black text-primary mb-1">+20.000</span>
+                <span className="block text-4xl font-black text-primary mb-1">+10.000</span>
                 <span className="text-sm uppercase tracking-widest font-medium text-slate-500">obras atendidas</span>
               </div>
             </div>
