@@ -20,6 +20,7 @@ export default function ProductsListPage() {
         let query = supabase
             .from("products")
             .select("*")
+            .order("is_active", { ascending: false })
             .order("created_at", { ascending: false });
 
         if (currentCategory) {
