@@ -91,7 +91,7 @@ export default async function AboutPage() {
             </div>
             <div className="grid grid-cols-2 gap-8 pt-8 border-t border-slate-800">
               <div>
-                <span className="block text-4xl font-black text-primary mb-1">40+</span>
+                <span className="block text-4xl font-black text-primary mb-1">40</span>
                 <span className="text-sm uppercase tracking-widest font-medium text-slate-500">Anos de Experiência</span>
               </div>
               <div>

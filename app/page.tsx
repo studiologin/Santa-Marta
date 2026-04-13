@@ -63,7 +63,7 @@ export default function Home() {
               />
             </div>
             <div className="absolute -bottom-6 -left-6 bg-primary p-8 rounded-lg shadow-2xl z-10">
-              <span className="block text-background-dark text-4xl font-black font-industrial">38+</span>
+              <span className="block text-background-dark text-4xl font-black font-industrial">40</span>
               <span className="block text-background-dark/80 text-[10px] font-bold uppercase tracking-widest">Anos de Experiência</span>
             </div>
           </div>
