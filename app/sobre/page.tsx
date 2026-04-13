@@ -129,9 +129,10 @@ export default async function AboutPage() {
             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
               <span className="material-symbols-outlined text-primary group-hover:text-background-dark text-4xl">target</span>
             </div>
-            <h4 className="text-2xl font-bold mb-4 font-industrial text-white">Missão</h4>
-            <p className="text-slate-400 leading-relaxed">
-              Prover soluções de engenharia industrial de alta complexidade com máxima segurança, garantindo a eficiência operacional de nossos clientes.
+            <h4 className="text-2xl font-bold mb-1 font-industrial text-white">Missão</h4>
+            <p className="text-primary text-xs font-bold mb-4 uppercase tracking-[0.2em] font-industrial">Por que existimos?</p>
+            <p className="text-slate-400 leading-relaxed text-sm">
+              Ofertar projetos e soluções personalizados em Segurança do Trabalho, fornecendo e instalando equipamentos de proteções coletivas, que possibilitem um ambiente de trabalho seguro aos profissionais do canteiro e as pessoas no entorno da construção.
             </p>
           </div>
           {/* Visão */}
@@ -139,9 +140,12 @@ export default async function AboutPage() {
             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
               <span className="material-symbols-outlined text-primary group-hover:text-background-dark text-4xl">visibility</span>
             </div>
-            <h4 className="text-2xl font-bold mb-4 font-industrial text-white">Visão</h4>
-            <p className="text-slate-400 leading-relaxed">
-              Ser a principal referência técnica em infraestrutura industrial no Norte e Nordeste, reconhecida pela inovação constante e sustentabilidade.
+            <h4 className="text-2xl font-bold mb-1 font-industrial text-white">Visão</h4>
+            <p className="text-primary text-xs font-bold mb-4 uppercase tracking-[0.2em] font-industrial">Onde queremos chegar?</p>
+            <p className="text-slate-400 leading-relaxed text-sm">
+              Ser referência no Norte e Nordeste do Brasil, sendo a empresa Top of Mind nos nichos de equipamentos de proteção coletiva e Geossintéticos. 
+              <br /><br />
+              Queremos ser reconhecidos pela segurança e qualidade das nossas soluções, sempre focados em atender nossos clientes com agilidade e personalização, garantindo assim o selo de obra segura para os nossos clientes.
             </p>
           </div>
           {/* Valores */}
@@ -149,9 +153,10 @@ export default async function AboutPage() {
             <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mb-8 group-hover:bg-primary transition-colors">
               <span className="material-symbols-outlined text-primary group-hover:text-background-dark text-4xl">handshake</span>
             </div>
-            <h4 className="text-2xl font-bold mb-4 font-industrial text-white">Valores</h4>
-            <p className="text-slate-400 leading-relaxed">
-              Integridade inegociável, segurança em primeiro lugar, respeito ambiental e excelência em cada detalhe do processo.
+            <h4 className="text-2xl font-bold mb-1 font-industrial text-white">Nossos Valores</h4>
+            <p className="text-primary text-xs font-bold mb-4 uppercase tracking-[0.2em] font-industrial">O que nos guia</p>
+            <p className="text-slate-400 leading-relaxed text-sm">
+              Honestidade, Ética, Respeito, Comprometimento, Sucesso do Cliente, Trabalho em equipe.
             </p>
           </div>
         </div>
