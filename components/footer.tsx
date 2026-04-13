@@ -2,14 +2,40 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Linkedin } from "lucide-react"
+import { Instagram, Linkedin, Facebook } from "lucide-react"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { LoginModal } from "./login-modal"
+import { createClient } from "@/utils/supabase/client"
 
 export function Footer() {
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [socialLinks, setSocialLinks] = useState<{
+    instagram?: string;
+    linkedin?: string;
+    facebook?: string;
+  }>({})
   const pathname = usePathname()
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function fetchLinks() {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("social_instagram, social_linkedin, social_facebook")
+        .eq("id", 1)
+        .maybeSingle()
+
+      if (data) {
+        setSocialLinks({
+          instagram: data.social_instagram,
+          linkedin: data.social_linkedin,
+          facebook: data.social_facebook
+        })
+      }
+    }
+    fetchLinks()
+  }, [])
 
   if (pathname?.startsWith("/dashboard")) return null;
 
@@ -30,12 +56,21 @@ export function Footer() {
             Referência em Geossintéticos e Engenharia de Segurança do Trabalho desde 1986. Qualidade técnica e compromisso com a segurança em cada projeto.
           </p>
           <div className="flex justify-center md:justify-start gap-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
-              <Linkedin className="w-5 h-5" />
-            </a>
+            {socialLinks.instagram && (
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
+                <Instagram className="w-5 h-5" />
+              </a>
+            )}
+            {socialLinks.linkedin && (
+              <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
+                <Linkedin className="w-5 h-5" />
+              </a>
+            )}
+            {socialLinks.facebook && (
+              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all">
+                <Facebook className="w-5 h-5" />
+              </a>
+            )}
           </div>
         </div>
         <div className="space-y-6 md:pl-12 flex flex-col items-center md:items-start text-center md:text-left">

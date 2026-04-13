@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { logAction } from "@/utils/logger";
-import { X, Eye, EyeOff, UserPlus, Shield, User as UserIcon, Trash2, Edit2, AlertTriangle, User, Phone } from "lucide-react";
+import { X, Eye, EyeOff, UserPlus, Shield, User as UserIcon, Trash2, Edit2, AlertTriangle, User, Phone, Instagram, Linkedin, Facebook, Save } from "lucide-react";
 
-type Tab = "usuarios" | "historico";
+type Tab = "usuarios" | "historico" | "redes-sociais";
 
 export default function ConfiguracoesPage() {
     const [activeTab, setActiveTab] = useState<Tab>("usuarios");
@@ -22,6 +22,16 @@ export default function ConfiguracoesPage() {
     const [logs, setLogs] = useState<any[]>([]);
     const [filterEmail, setFilterEmail] = useState("");
     const [filterAction, setFilterAction] = useState("");
+
+    // Social Settings state
+    const [socialSettings, setSocialSettings] = useState({
+        instagram: "",
+        linkedin: "",
+        facebook: ""
+    });
+    const [socialLoading, setSocialLoading] = useState(false);
+    const [socialSuccess, setSocialSuccess] = useState(false);
+    const [socialError, setSocialError] = useState<string | null>(null);
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,7 +96,58 @@ export default function ConfiguracoesPage() {
             .limit(100);
         setLogs(logsData || []);
 
+        // Fetch Social Settings
+        const { data: socialData } = await supabase
+            .from("site_settings")
+            .select("social_instagram, social_linkedin, social_facebook")
+            .eq("id", 1)
+            .maybeSingle();
+
+        if (socialData) {
+            setSocialSettings({
+                instagram: socialData.social_instagram || "",
+                linkedin: socialData.social_linkedin || "",
+                facebook: socialData.social_facebook || ""
+            });
+        }
+
         setLoading(false);
+    };
+
+    const handleSaveSocialSettings = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setSocialLoading(true);
+        setSocialError(null);
+        setSocialSuccess(false);
+
+        try {
+            const { error: updateError } = await supabase
+                .from("site_settings")
+                .update({
+                    social_instagram: socialSettings.instagram,
+                    social_linkedin: socialSettings.linkedin,
+                    social_facebook: socialSettings.facebook,
+                    updated_at: new Date().toISOString()
+                })
+                .eq("id", 1);
+
+            if (updateError) throw updateError;
+
+            // Log Action
+            await logAction({
+                action: 'UPDATE',
+                entityType: 'settings',
+                entityName: 'Social Media Links',
+                details: socialSettings
+            });
+
+            setSocialSuccess(true);
+            setTimeout(() => setSocialSuccess(false), 3000);
+        } catch (err: any) {
+            setSocialError(err.message || "Erro ao salvar configurações");
+        } finally {
+            setSocialLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -340,6 +401,14 @@ export default function ConfiguracoesPage() {
                             <span className="material-symbols-outlined text-lg">history</span>
                             Histórico de Ações
                         </button>
+                        <button
+                            onClick={() => setActiveTab("redes-sociais")}
+                            className={`flex-1 md:flex-none justify-center px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 whitespace-nowrap ${activeTab === "redes-sociais" ? "bg-[#cba36d] text-[#0d1b2a]" : "text-slate-400 hover:text-white"
+                                }`}
+                        >
+                            <span className="material-symbols-outlined text-lg">share</span>
+                            Redes Sociais
+                        </button>
                     </div>
                 </div>
             </div>
@@ -516,6 +585,95 @@ export default function ConfiguracoesPage() {
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                {activeTab === "redes-sociais" && (
+                    <div className="bg-[#0d1b2a] rounded-[32px] border border-white/5 shadow-2xl overflow-hidden flex flex-col h-full max-w-2xl mx-auto w-full">
+                        <div className="p-8 border-b border-white/5 bg-white/5">
+                            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-white">Links das Redes Sociais</h3>
+                            <p className="text-slate-500 text-[11px] mt-2">Configure os links que serão exibidos no rodapé do site.</p>
+                        </div>
+
+                        <form onSubmit={handleSaveSocialSettings} className="p-8 space-y-6">
+                            {socialError && (
+                                <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-xs p-4 rounded-xl text-center font-bold">
+                                    {socialError}
+                                </div>
+                            )}
+
+                            {socialSuccess && (
+                                <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs p-4 rounded-xl text-center font-bold flex items-center justify-center gap-2">
+                                    <span className="material-symbols-outlined">check_circle</span>
+                                    Configurações salvas com sucesso!
+                                </div>
+                            )}
+
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1 mb-2 block">
+                                        Instagram
+                                    </label>
+                                    <div className="relative group">
+                                        <Instagram className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#cba36d] transition-colors" />
+                                        <input
+                                            type="url"
+                                            value={socialSettings.instagram}
+                                            onChange={e => setSocialSettings(prev => ({ ...prev, instagram: e.target.value }))}
+                                            placeholder="https://instagram.com/perfil"
+                                            className="w-full bg-slate-950/50 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-white focus:border-[#cba36d]/50 outline-none transition-all placeholder:text-slate-700 text-sm font-medium"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1 mb-2 block">
+                                        LinkedIn
+                                    </label>
+                                    <div className="relative group">
+                                        <Linkedin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#cba36d] transition-colors" />
+                                        <input
+                                            type="url"
+                                            value={socialSettings.linkedin}
+                                            onChange={e => setSocialSettings(prev => ({ ...prev, linkedin: e.target.value }))}
+                                            placeholder="https://linkedin.com/company/perfil"
+                                            className="w-full bg-slate-950/50 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-white focus:border-[#cba36d]/50 outline-none transition-all placeholder:text-slate-700 text-sm font-medium"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1 mb-2 block">
+                                        Facebook
+                                    </label>
+                                    <div className="relative group">
+                                        <Facebook className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#cba36d] transition-colors" />
+                                        <input
+                                            type="url"
+                                            value={socialSettings.facebook}
+                                            onChange={e => setSocialSettings(prev => ({ ...prev, facebook: e.target.value }))}
+                                            placeholder="https://facebook.com/perfil"
+                                            className="w-full bg-slate-950/50 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-white focus:border-[#cba36d]/50 outline-none transition-all placeholder:text-slate-700 text-sm font-medium"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={socialLoading || socialSuccess}
+                                className="w-full bg-[#cba36d] text-[#0d1b2a] py-5 rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-xl shadow-black/20 hover:bg-[#b8925c] transition-all disabled:opacity-50 flex items-center justify-center gap-3 mt-4"
+                            >
+                                {socialLoading ? (
+                                    <div className="w-5 h-5 border-2 border-[#0d1b2a]/20 border-t-[#0d1b2a] rounded-full animate-spin" />
+                                ) : socialSuccess ? (
+                                    "CONFIGURAÇÕES SALVAS!"
+                                ) : (
+                                    <>
+                                        <Save className="w-5 h-5" />
+                                        SALVAR LINKS
+                                    </>
+                                )}
+                            </button>
+                        </form>
                     </div>
                 )}
             </div>
