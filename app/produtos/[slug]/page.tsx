@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { ProductGallery } from "@/components/product-gallery";
 
+export const revalidate = 0;
+
 export async function generateStaticParams() {
   const supabase = await createClient();
   const { data } = await supabase.from('products').select('slug');

@@ -62,18 +62,32 @@ export function ProductGallery({ productName, images }: ProductGalleryProps) {
         <div className="flex flex-col gap-4">
             {/* Imagem Principal */}
             <div
-                className="relative aspect-video w-full overflow-hidden bg-[#162a3f] rounded-xl group border border-white/5 cursor-pointer"
+                className="relative aspect-video w-full overflow-hidden bg-[#0d1b2a] rounded-xl group border border-white/5 cursor-pointer shadow-2xl"
                 onClick={() => setIsLightboxOpen(true)}
             >
-                <Image
-                    src={images[activeIndex]}
-                    alt={productName}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 60vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
-                />
-                <div className="absolute inset-0 bg-[#07121d]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                {/* Background Blur (Premium Effect) */}
+                <div className="absolute inset-0 z-0 scale-110 blur-3xl opacity-30 grayscale pointer-events-none">
+                    <Image
+                        src={images[activeIndex]}
+                        alt=""
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+
+                {/* Imagem Real */}
+                <div className="relative z-10 w-full h-full flex items-center justify-center p-4 sm:p-8">
+                    <Image
+                        src={images[activeIndex]}
+                        alt={productName}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        className="object-contain drop-shadow-2xl transition-all duration-700 group-hover:scale-[1.02]"
+                        priority
+                    />
+                </div>
+                
+                <div className="absolute inset-0 z-20 bg-[#07121d]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                     <span className="material-symbols-outlined text-white text-5xl opacity-80 mix-blend-screen scale-50 group-hover:scale-100 transition-transform duration-300">zoom_out_map</span>
                 </div>
             </div>
