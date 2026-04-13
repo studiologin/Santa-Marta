@@ -114,10 +114,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
               >
                 Solicitar Orçamento
               </a>
-              <button className="w-full bg-transparent border border-white/20 hover:border-primary/50 text-slate-200 py-4 rounded font-medium text-sm transition-all flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-sm">download</span>
-                Baixar Catálogo Técnico (PDF)
-              </button>
+              
+              {product.catalog_enabled && product.catalog_url && (
+                <a 
+                  href={product.catalog_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-transparent border border-white/20 hover:border-primary/50 text-slate-200 py-4 rounded font-medium text-sm transition-all flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-sm">download</span>
+                  {product.catalog_label || "Baixar Catálogo Técnico (PDF)"}
+                </a>
+              )}
             </div>
           </div>
         </div>

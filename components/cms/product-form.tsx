@@ -42,6 +42,9 @@ export function ProductForm({ productId }: ProductFormProps) {
         gallery_urls: [] as string[],
         usage_application: "",
         is_active: true,
+        catalog_url: "",
+        catalog_label: "Baixar Catálogo Técnico (PDF)",
+        catalog_enabled: false,
     });
 
     const generateSlug = (text: string) => {
@@ -96,6 +99,9 @@ export function ProductForm({ productId }: ProductFormProps) {
                         gallery_urls: product.gallery_urls || [],
                         usage_application: product.usage_application || "",
                         is_active: product.is_active,
+                        catalog_url: product.catalog_url || "",
+                        catalog_label: product.catalog_label || "Baixar Catálogo Técnico (PDF)",
+                        catalog_enabled: product.catalog_enabled || false,
                     });
 
                     if (product.technical_sheet) {
@@ -156,8 +162,10 @@ export function ProductForm({ productId }: ProductFormProps) {
 
         if (type === 'main') {
             setFormData(prev => ({ ...prev, image_url: uploadedUrls[0] }));
-        } else {
+        } else if (type === 'gallery') {
             setFormData(prev => ({ ...prev, gallery_urls: [...prev.gallery_urls, ...uploadedUrls] }));
+        } else if (type === 'catalog') {
+            setFormData(prev => ({ ...prev, catalog_url: uploadedUrls[0] }));
         }
         setLoading(false);
     };
@@ -386,6 +394,76 @@ export function ProductForm({ productId }: ProductFormProps) {
                                     </button>
                                 </div>
                             ))}
+                        </div>
+                    </section>
+
+                    {/* Catálogo Técnico */}
+                    <section className="bg-[#0d1b2a] p-10 rounded-[32px] border border-white/5 shadow-2xl space-y-10 group hover:border-[#cba36d]/20 transition-colors">
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-[#cba36d]/10 flex items-center justify-center text-[#cba36d]">
+                                    <span className="material-symbols-outlined">file_present</span>
+                                </div>
+                                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-white">Catálogo Técnico (PDF)</h3>
+                            </div>
+                            
+                            <div className="flex items-center gap-4 bg-white/5 px-4 py-2 rounded-xl border border-white/5">
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ativar Botão</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, catalog_enabled: !formData.catalog_enabled })}
+                                    className={cn(
+                                        "w-10 h-5 rounded-full p-1 transition-all duration-300",
+                                        formData.catalog_enabled ? "bg-emerald-500" : "bg-slate-700"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "w-3 h-3 bg-white rounded-full transition-transform duration-300",
+                                        formData.catalog_enabled ? "translate-x-5" : "translate-x-0"
+                                    )} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1">Texto do Botão</label>
+                                <input
+                                    type="text"
+                                    placeholder="Ex: Baixar Catálogo PDF"
+                                    className="w-full bg-slate-950/50 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#cba36d]/50 outline-none transition-all placeholder:text-slate-700 font-medium"
+                                    value={formData.catalog_label}
+                                    onChange={e => setFormData({ ...formData, catalog_label: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1">Arquivo PDF</label>
+                                <div className="relative h-[58px] bg-slate-950/50 border border-white/5 rounded-2xl flex items-center px-4 group/file overflow-hidden">
+                                    <span className="material-symbols-outlined text-[#cba36d] mr-3">upload_file</span>
+                                    <span className="text-sm text-slate-400 truncate flex-1 font-medium">
+                                        {formData.catalog_url ? formData.catalog_url.split('/').pop() : "Nenhum arquivo selecionado"}
+                                    </span>
+                                    <label className="absolute inset-0 bg-[#cba36d] text-[#0d1b2a] opacity-0 group-hover/file:opacity-100 transition-all flex items-center justify-center cursor-pointer font-black text-[10px] uppercase tracking-widest">
+                                        Selecionar PDF
+                                        <input 
+                                            type="file" 
+                                            className="hidden" 
+                                            accept="application/pdf" 
+                                            onChange={e => handleImageUpload(e, 'catalog' as any)} 
+                                        />
+                                    </label>
+                                    {formData.catalog_url && (
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setFormData({...formData, catalog_url: ""})}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-red-500/20 text-red-500 flex items-center justify-center opacity-0 group-hover/file:opacity-100 transition-all hover:bg-red-500 hover:text-white"
+                                        >
+                                            <span className="material-symbols-outlined text-sm font-bold">close</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </section>
                 </div>
