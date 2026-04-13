@@ -99,15 +99,15 @@ export default function ConfiguracoesPage() {
         // Fetch Social Settings
         const { data: socialData } = await supabase
             .from("site_settings")
-            .select("social_instagram, social_linkedin, social_facebook")
-            .eq("id", 1)
+            .select("value")
+            .eq("key", "social_links")
             .maybeSingle();
 
-        if (socialData) {
+        if (socialData?.value) {
             setSocialSettings({
-                instagram: socialData.social_instagram || "",
-                linkedin: socialData.social_linkedin || "",
-                facebook: socialData.social_facebook || ""
+                instagram: socialData.value.instagram || "",
+                linkedin: socialData.value.linkedin || "",
+                facebook: socialData.value.facebook || ""
             });
         }
 
@@ -124,12 +124,14 @@ export default function ConfiguracoesPage() {
             const { error: updateError } = await supabase
                 .from("site_settings")
                 .update({
-                    social_instagram: socialSettings.instagram,
-                    social_linkedin: socialSettings.linkedin,
-                    social_facebook: socialSettings.facebook,
+                    value: {
+                        instagram: socialSettings.instagram,
+                        linkedin: socialSettings.linkedin,
+                        facebook: socialSettings.facebook
+                    },
                     updated_at: new Date().toISOString()
                 })
-                .eq("id", 1);
+                .eq("key", "social_links");
 
             if (updateError) throw updateError;
 

@@ -22,15 +22,15 @@ export function Footer() {
     async function fetchLinks() {
       const { data } = await supabase
         .from("site_settings")
-        .select("social_instagram, social_linkedin, social_facebook")
-        .eq("id", 1)
+        .select("value")
+        .eq("key", "social_links")
         .maybeSingle()
 
-      if (data) {
+      if (data?.value) {
         setSocialLinks({
-          instagram: data.social_instagram,
-          linkedin: data.social_linkedin,
-          facebook: data.social_facebook
+          instagram: data.value.instagram,
+          linkedin: data.value.linkedin,
+          facebook: data.value.facebook
         })
       }
     }
