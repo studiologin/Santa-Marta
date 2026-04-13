@@ -56,7 +56,6 @@ export default async function AboutPage() {
           <div className="space-y-8">
             <div className="inline-block border-l-4 border-primary pl-6">
               <h2 className="text-3xl font-bold uppercase tracking-tight font-industrial text-white">Um Legado de 40 Anos</h2>
-              <p className="text-primary font-semibold mt-1">Sediada em Salvador, Bahia</p>
             </div>
 
             {content.history_text ? (
