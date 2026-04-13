@@ -128,7 +128,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <div className="lg:col-span-2">
             <h3 className="text-2xl font-bold text-white mb-8 border-l-4 border-primary pl-4 uppercase tracking-wider font-display">Ficha Técnica</h3>
 
-            {product.technical_sheet && typeof product.technical_sheet === 'object' && Object.keys(product.technical_sheet).length > 0 ? (
+            {product.technical_sheet && (Array.isArray(product.technical_sheet) ? product.technical_sheet.length > 0 : Object.keys(product.technical_sheet).length > 0) ? (
               <div className="overflow-x-auto rounded-xl border border-white/10">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-[#162a3f] text-primary uppercase text-[10px] tracking-widest font-bold font-display">
@@ -138,12 +138,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     </tr>
                   </thead>
                   <tbody className="text-slate-300">
-                    {Object.entries(product.technical_sheet).map(([key, value], i) => (
-                      <tr key={i} className="hover:bg-white/5 transition-colors">
-                        <td className="px-6 py-4 border-b border-white/5 font-bold uppercase tracking-tighter text-xs">{key.replace(/_/g, ' ')}</td>
-                        <td className="px-6 py-4 border-b border-white/5">{String(value)}</td>
-                      </tr>
-                    ))}
+                    {(Array.isArray(product.technical_sheet)
+                      ? product.technical_sheet
+                      : Object.entries(product.technical_sheet)).map((item: any, i: number) => {
+                        const key = Array.isArray(product.technical_sheet) ? item.key : item[0];
+                        const value = Array.isArray(product.technical_sheet) ? item.value : item[1];
+                        return (
+                          <tr key={i} className="hover:bg-white/5 transition-colors">
+                            <td className="px-6 py-4 border-b border-white/5 font-bold uppercase tracking-tighter text-xs">{key.replace(/_/g, ' ')}</td>
+                            <td className="px-6 py-4 border-b border-white/5">{String(value)}</td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>

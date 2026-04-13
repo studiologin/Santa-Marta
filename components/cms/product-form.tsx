@@ -98,10 +98,12 @@ export function ProductForm({ productId }: ProductFormProps) {
                         is_active: product.is_active,
                     });
 
-                    if (product.technical_sheet && typeof product.technical_sheet === 'object') {
-                        const sheet = Object.entries(product.technical_sheet).map(([key, value]) => ({
-                            key, value: String(value)
-                        }));
+                    if (product.technical_sheet) {
+                        const sheet = Array.isArray(product.technical_sheet)
+                            ? product.technical_sheet
+                            : Object.entries(product.technical_sheet).map(([key, value]) => ({
+                                key, value: String(value)
+                            }));
                         setTechnicalSheet(sheet.length > 0 ? sheet : [{ key: "", value: "" }]);
                     }
 
@@ -113,6 +115,15 @@ export function ProductForm({ productId }: ProductFormProps) {
             fetchProduct();
         }
     }, [productId, isEditing]);
+
+    const moveSheetRow = (index: number, direction: 'up' | 'down') => {
+        const newSheet = [...technicalSheet];
+        const targetIndex = direction === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= newSheet.length) return;
+
+        [newSheet[index], newSheet[targetIndex]] = [newSheet[targetIndex], newSheet[index]];
+        setTechnicalSheet(newSheet);
+    };
 
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'main' | 'gallery') => {
@@ -160,14 +171,11 @@ export function ProductForm({ productId }: ProductFormProps) {
 
         const supabase = createClient();
 
-        const sheetObject = technicalSheet.reduce((acc, curr) => {
-            if (curr.key) acc[curr.key] = curr.value;
-            return acc;
-        }, {} as any);
+        const sheetData = technicalSheet.filter(row => row.key.trim() !== "");
 
         const payload = {
             ...formData,
-            technical_sheet: sheetObject,
+            technical_sheet: sheetData,
         };
 
         let currentId = productId;
@@ -328,11 +336,29 @@ export function ProductForm({ productId }: ProductFormProps) {
 
                         <div className="space-y-4">
                             {technicalSheet.map((row, i) => (
-                                <div key={i} className="flex gap-4 items-center animate-in fade-in slide-in-from-left-4 duration-300">
+                                <div key={i} className="flex gap-3 items-center animate-in fade-in slide-in-from-left-4 duration-300 group/row">
+                                    <div className="flex flex-col gap-1">
+                                        <button
+                                            type="button"
+                                            disabled={i === 0}
+                                            onClick={() => moveSheetRow(i, 'up')}
+                                            className="w-6 h-6 flex items-center justify-center rounded bg-white/5 text-slate-500 hover:text-[#cba36d] hover:bg-[#cba36d]/10 disabled:opacity-0 transition-all border border-white/5"
+                                        >
+                                            <span className="material-symbols-outlined text-sm">keyboard_arrow_up</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            disabled={i === technicalSheet.length - 1}
+                                            onClick={() => moveSheetRow(i, 'down')}
+                                            className="w-6 h-6 flex items-center justify-center rounded bg-white/5 text-slate-500 hover:text-[#cba36d] hover:bg-[#cba36d]/10 disabled:opacity-0 transition-all border border-white/5"
+                                        >
+                                            <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+                                        </button>
+                                    </div>
                                     <div className="flex-1 grid grid-cols-2 gap-4">
                                         <input
                                             placeholder="Ex: Espessura"
-                                            className="bg-slate-950/30 border border-white/5 rounded-xl px-5 py-3.5 text-white text-sm outline-none focus:border-[#cba36d]/30 transition-all"
+                                            className="bg-slate-950/30 border border-white/5 rounded-xl px-5 py-3.5 text-white text-sm outline-none focus:border-[#cba36d]/30 transition-all font-display uppercase tracking-wider h-12"
                                             value={row.key}
                                             onChange={e => {
                                                 const newSheet = [...technicalSheet];
@@ -342,7 +368,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                                         />
                                         <input
                                             placeholder="Ex: 0.5mm"
-                                            className="bg-slate-950/30 border border-white/5 rounded-xl px-5 py-3.5 text-[#cba36d] text-sm outline-none focus:border-[#cba36d]/30 transition-all font-bold"
+                                            className="bg-slate-950/30 border border-white/5 rounded-xl px-5 py-3.5 text-[#cba36d] text-sm outline-none focus:border-[#cba36d]/30 transition-all font-bold h-12"
                                             value={row.value}
                                             onChange={e => {
                                                 const newSheet = [...technicalSheet];
@@ -354,7 +380,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                                     <button
                                         type="button"
                                         onClick={() => removeSheetRow(i)}
-                                        className="w-10 h-10 flex items-center justify-center text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                                        className="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 hover:bg-red-500/10 rounded-xl transition-all border border-transparent hover:border-red-500/20"
                                     >
                                         <span className="material-symbols-outlined text-lg">delete</span>
                                     </button>

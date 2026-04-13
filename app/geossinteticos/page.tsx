@@ -249,12 +249,18 @@ export default function GeosyntheticsPage() {
 
                           <div className="mt-auto space-y-4">
                             <div className="flex flex-wrap items-center gap-4 py-3 border-t border-slate-800/50">
-                              {product.technical_sheet && typeof product.technical_sheet === 'object' && Object.entries(product.technical_sheet).slice(0, 2).map(([key, value], index) => (
-                                <div key={index} className="flex flex-col">
-                                  <span className="text-[10px] uppercase font-black text-slate-600 tracking-tighter font-display">{key}</span>
-                                  <span className="text-xs font-bold text-slate-300">{String(value)}</span>
-                                </div>
-                              ))}
+                              {(Array.isArray(product.technical_sheet)
+                                ? product.technical_sheet
+                                : Object.entries(product.technical_sheet || {})).slice(0, 2).map((item: any, index: number) => {
+                                  const key = Array.isArray(product.technical_sheet) ? item.key : item[0];
+                                  const value = Array.isArray(product.technical_sheet) ? item.value : item[1];
+                                  return (
+                                    <div key={index} className="flex flex-col">
+                                      <span className="text-[10px] uppercase font-black text-slate-600 tracking-tighter font-display">{key}</span>
+                                      <span className="text-xs font-bold text-slate-300">{String(value)}</span>
+                                    </div>
+                                  );
+                                })}
                             </div>
                             <button className="w-full flex items-center justify-center gap-2 py-3 bg-slate-800 group-hover:bg-primary text-slate-300 group-hover:text-background-dark text-xs font-black uppercase tracking-widest transition-all font-display">
                               Ver Detalhes <span className="material-symbols-outlined text-sm">arrow_forward</span>
