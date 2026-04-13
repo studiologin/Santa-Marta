@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { VideoSection } from "@/components/video-section";
-import { ScrollBanner } from "@/components/scroll-banner";
+import { HeroStatic } from "@/components/hero-static";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 overflow-x-hidden">
-      {/* Scroll Animated Hero Banner */}
-      <ScrollBanner />
+      {/* Static Hero Banner */}
+      <HeroStatic />
 
       {/* Numbers Section */}
       <section className="relative z-20 max-w-7xl mx-auto px-6 w-full pt-16 md:pt-24 mb-16 md:mb-24">
