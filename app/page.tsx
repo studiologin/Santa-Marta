@@ -55,7 +55,7 @@ export default function Home() {
           <div className="relative">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/10 relative">
               <Image
-                src="/images/products/engineering_consultancy_professional_construction_office_plans_site_visit_1772753110437.png"
+                src="/images/fundada.png"
                 alt="História Santa Marta"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
