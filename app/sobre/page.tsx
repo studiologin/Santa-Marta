@@ -291,7 +291,7 @@ export default async function AboutPage() {
                 { question: "Quais setores a Santa Marta atende?", answer: "Atendemos os setores de mineração, siderurgia, energia, petroquímica, construção civil, saneamento básico e logística em todo o território nacional." },
                 { question: "Como solicitar um orçamento técnico?", answer: "Você pode solicitar um orçamento entrando em contato com nossa equipe pela página de \"Contato\", via WhatsApp, ou enviando um e-mail com as plantas e necessidades preliminares do seu projeto técnico." },
                 { question: "A empresa possui certificações de qualidade?", answer: "Sim, a Santa Marta atua seguindo os mais rigorosos padrões de qualidade e segurança do trabalho, garantindo documentação, responsabilidade técnica, excelência operacional e conformidade nas normas de gestão ambiental." },
-                { question: "Até onde se estende a área de atuação da empresa?", answer: "Contamos com estrutura de atuação consolidada e expertise para operar em todo o Brasil. Estrategicamente, posicionamos nossa matriz em Salvador (BA) e a filial em Recife (PE), atendendo todos os estados do País e de polos industriais complexos com robusta capacidade logística." }
+                { question: "Até onde se estende a área de atuação da empresa?", answer: "Contamos com estrutura de atuação consolidada e expertise para operar em todo o Brasil. Estrategicamente, posicionamos nossa matriz em Salvador (BA) e a filial em Recife (PE), atendendo todos os estados do País, com foco de atuação em todos os Estados do Norte e Nordeste." }
               ];
               const faqs = content.faq && content.faq.length > 0 ? content.faq : defaultFaq;
 
