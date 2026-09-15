@@ -168,6 +168,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 Nenhuma ficha técnica especificada para este produto.
               </div>
             )}
+
+            {/* Uso e Aplicação */}
+            {product.usage_application && (
+              <div className="mt-16">
+                <h3 className="text-2xl font-bold text-white mb-8 border-l-4 border-primary pl-4 uppercase tracking-wider font-display">
+                  Uso e Aplicação
+                </h3>
+                <div className="p-8 rounded-xl border border-white/10 bg-[#162a3f]/40 text-slate-300 text-base md:text-lg leading-relaxed whitespace-pre-line">
+                  {product.usage_application}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
