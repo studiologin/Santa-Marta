@@ -87,9 +87,8 @@ export default function GeosyntheticsPage() {
             <span className="text-primary">Geossintéticos</span>
           </div>
           <div className="max-w-4xl flex flex-col items-center">
-            <h1 className="text-4xl md:text-7xl lg:text-7xl xl:text-[5.5rem] font-bold tracking-tight text-white mb-6 uppercase font-industrial leading-[1.05] opacity-95 drop-shadow-lg">
-              GEOSSIN-<br />
-              <span className="text-primary">TÉTICOS</span>
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold tracking-tight text-white mb-6 uppercase font-industrial leading-[1.05] opacity-95 drop-shadow-lg">
+              Geossintéticos
             </h1>
             <div className="h-1 w-24 bg-primary mb-10"></div>
             <p className="text-xl md:text-2xl text-slate-300 max-w-3xl font-light leading-relaxed whitespace-pre-line drop-shadow">

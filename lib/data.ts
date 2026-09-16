@@ -42,28 +42,28 @@ export const faqs = [
 
 export const services = [
   {
-    id: "instalacao",
-    slug: "instalacao",
-    title: "Instalação Técnica",
-    description: "Execução especializada de instalação de geossintéticos e proteções coletivas.",
-    fullDescription: "Nossa equipe de instalação é altamente treinada e certificada para garantir que todos os materiais sejam aplicados conforme as normas técnicas vigentes. Utilizamos equipamentos de ponta para assegurar a integridade e a longevidade das obras, seja na aplicação de geomembranas, geogrelhas ou sistemas de proteção coletiva.",
-    image: "/images/products/technical_installation_service_workers_pond_liner_1772753090312.png"
-  },
-  {
     id: "projetos",
     slug: "projetos",
-    title: "Projetos de Engenharia",
-    description: "Desenvolvimento de projetos personalizados para obras de infraestrutura e geotecnia.",
-    fullDescription: "Elaboramos projetos detalhados para obras que utilizam geossintéticos, focando em eficiência, economia e segurança. Nossos engenheiros analisam as condições do solo e as necessidades específicas de cada cliente para entregar soluções sob medida.",
+    title: "Projetos",
+    description: "Desenvolvemos projetos de proteção coletiva voltados à realidade de cada obra. Definimos soluções, materiais e formas de instalação considerando os riscos das atividades, as características da construção e a aplicação prática no canteiro.",
+    fullDescription: "Desenvolvemos projetos de sistemas de proteção coletiva voltados à realidade e especificidades de cada obra. Realizamos o dimensionamento e a especificação técnica de materiais e o detalhamento completo para instalação segura e eficiente.",
     image: "/images/products/engineering_consultancy_professional_construction_office_plans_site_visit_1772753110437.png"
+  },
+  {
+    id: "instalacao",
+    slug: "instalacao",
+    title: "Instalação",
+    description: "Instalamos sistemas de proteção coletiva de acordo com as necessidades e as etapas de cada obra. Nossa atuação considera as condições do local e as atividades em execução, com foco na proteção dos trabalhadores e na segurança do canteiro.",
+    fullDescription: "Instalação de proteções coletivas com montagem rigorosa conforme projeto e condições da obra, garantindo a perfeita adequação das proteções às diferentes etapas construtivas.",
+    image: "/images/products/technical_installation_service_workers_pond_liner_1772753090312.png"
   },
   {
     id: "consultoria",
     slug: "consultoria",
-    title: "Consultoria em Segurança",
-    description: "Assessoria completa em segurança do trabalho e normas regulamentadoras.",
-    fullDescription: "Oferecemos consultoria especializada para adequação de obras às normas de segurança do trabalho, com foco em proteções coletivas e prevenção de acidentes. Realizamos diagnósticos, treinamentos e acompanhamento técnico.",
-    image: "/images/products/geosynthetics_hero_1772752854099.png"
+    title: "Consultoria em Segurança do Trabalho",
+    description: "Apoiamos sua equipe na identificação de riscos e na definição de medidas de prevenção para o dia a dia da obra. Orientamos a escolha, a aplicação e a adequação das proteções coletivas, contribuindo para um canteiro mais seguro e organizado.",
+    fullDescription: "Assessoria completa com avaliação técnica das condições de segurança da obra, orientação sobre sistemas de proteções coletivas e emissão de recomendações estratégicas de adequação e melhoria contínua.",
+    image: "/images/products/lifeline_anchorage_system_safety_worker_high_rise_1772753076458.png"
   }
 ];
 

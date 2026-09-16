@@ -2,6 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/server";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function ServicesPage() {
   const supabase = await createClient();
   const { data } = await supabase.from('pages').select('content').eq('slug', 'servicos').single();
@@ -64,50 +67,93 @@ export default async function ServicesPage() {
           {(() => {
             const defaultCards = [
               {
-                id: 'c1', tag: 'Pilar 01', title: 'Instalação',
-                description: 'Executamos projetos de engenharia complexos com equipes altamente qualificadas. Montagem industrial, adequação estrutural e implementação de redes operacionais com precisão e segurança para minimizar o tempo de inatividade da sua planta.',
-                list: ['Montagem Eletromecânica', 'Instalação de Sistemas Hidráulicos', 'Adequações Estruturais e NR'],
-                buttonText: 'Solicitar Orçamento', buttonLink: '#',
-                image: '/images/products/technical_installation_service_workers_pond_liner_1772753090312.png'
-              },
-              {
-                id: 'c2', tag: 'Pilar 02', title: 'Projetos',
-                description: 'Desenvolvimento de soluções de engenharia sob medida. Desde o dimensionamento e cálculo funcional até o projeto executivo completo, desenhamos a melhor relação custo-benefício e adequação técnica às necessidades da sua indústria.',
-                list: ['Projetos Básicos e Executivos', 'Cálculos e Dimensionamentos', 'As-Built e Modelagem 3D'],
-                buttonText: 'Conhecer Projetos', buttonLink: '#',
+                id: 'c1',
+                tag: 'Pilar 01',
+                title: 'Projetos',
+                icon: 'architecture',
+                description: 'Desenvolvemos projetos de proteção coletiva voltados à realidade de cada obra. Definimos soluções, materiais e formas de instalação considerando os riscos das atividades, as características da construção e a aplicação prática no canteiro.',
+                list: [
+                  'Projetos de sistemas de proteção coletiva',
+                  'Dimensionamento e especificação de materiais',
+                  'Detalhamento técnico para instalação'
+                ],
+                buttonText: 'Conhecer Projetos',
+                buttonLink: '#',
                 image: '/images/products/engineering_consultancy_professional_construction_office_plans_site_visit_1772753110437.png'
               },
               {
-                id: 'c3', tag: 'Pilar 03', title: 'Consultoria em Segurança do Trabalho',
-                description: 'Asseguramos que sua planta opere dentro dos mais rigorosos padrões normativos. Oferecemos laudos documentais, auditoria de processos e orientações focadas em um ambiente ocupacional livre de riscos técnicos e acidentes operacionais.',
-                list: ['Adequação a Normas Técnicas (NR)', 'Emissão de Laudos de Engenharia', 'Gerenciamento de Riscos (PGR/GRO)'],
-                buttonText: 'Falar com Especialista', buttonLink: '#',
+                id: 'c2',
+                tag: 'Pilar 02',
+                title: 'Instalação',
+                icon: 'construction',
+                description: 'Instalamos sistemas de proteção coletiva de acordo com as necessidades e as etapas de cada obra. Nossa atuação considera as condições do local e as atividades em execução, com foco na proteção dos trabalhadores e na segurança do canteiro.',
+                list: [
+                  'Instalação de proteções coletivas',
+                  'Montagem conforme projeto e condições da obra',
+                  'Adequação das proteções às etapas construtivas'
+                ],
+                buttonText: 'Solicitar Orçamento',
+                buttonLink: '#',
+                image: '/images/products/technical_installation_service_workers_pond_liner_1772753090312.png'
+              },
+              {
+                id: 'c3',
+                tag: 'Pilar 03',
+                title: 'Consultoria em Segurança do Trabalho',
+                icon: 'health_and_safety',
+                description: 'Apoiamos sua equipe na identificação de riscos e na definição de medidas de prevenção para o dia a dia da obra. Orientamos a escolha, a aplicação e a adequação das proteções coletivas, contribuindo para um canteiro mais seguro e organizado.',
+                list: [
+                  'Avaliação das condições de segurança da obra',
+                  'Orientação técnica sobre proteções coletivas',
+                  'Recomendações de adequação e melhoria'
+                ],
+                buttonText: 'Falar com Especialista',
+                buttonLink: '#',
                 image: '/images/products/lifeline_anchorage_system_safety_worker_high_rise_1772753076458.png'
               }
             ];
 
             const cardsToRender = content.cards && content.cards.length > 0 ? content.cards : defaultCards;
 
+            const getPilarIcon = (card: any, idx: number) => {
+              if (card.icon) return card.icon;
+              const titleLower = (card.title || '').toLowerCase();
+              if (titleLower.includes('projeto')) return 'architecture';
+              if (titleLower.includes('instala')) return 'construction';
+              if (titleLower.includes('segurança') || titleLower.includes('consultoria')) return 'health_and_safety';
+              return idx === 0 ? 'architecture' : idx === 1 ? 'construction' : 'health_and_safety';
+            };
+
             return cardsToRender.map((card: any, index: number) => {
               const isReverse = index % 2 !== 0; // Alternando a ordem das colunas
+              const iconName = getPilarIcon(card, index);
+
               return (
-                <div key={card.id || index} className={`flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 items-center bg-slate-900/40 p-6 md:p-8 rounded-xl border border-slate-800`}>
+                <div key={card.id || index} className={`flex flex-col ${isReverse ? 'md:flex-row-reverse' : 'md:flex-row'} gap-8 items-center bg-slate-900/40 p-6 md:p-8 rounded-xl border border-slate-800 hover:border-slate-700/80 transition-colors`}>
                   <div className="flex-1 space-y-4">
-                    {card.tag && <span className="text-primary font-bold text-xs tracking-widest uppercase font-display">{card.tag}</span>}
-                    <h3 className="text-2xl font-bold text-slate-100 font-display">{card.title}</h3>
-                    <p className="text-slate-400 leading-relaxed whitespace-pre-line">
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                        <span className="material-symbols-outlined text-lg">{iconName}</span>
+                      </div>
+                      {card.tag && <span className="text-primary font-bold text-xs tracking-widest uppercase font-display">{card.tag}</span>}
+                    </div>
+                    <h3 className="text-2xl lg:text-3xl font-bold text-slate-100 font-display">{card.title}</h3>
+                    <p className="text-slate-400 leading-relaxed whitespace-pre-line text-sm lg:text-base">
                       {card.description}
                     </p>
                     {card.list && card.list.length > 0 && (
-                      <ul className="space-y-2 text-slate-300 mb-6">
+                      <ul className="space-y-2.5 text-slate-300 mb-6">
                         {card.list.map((item: string, i: number) => (
-                          <li key={i} className="flex items-center gap-2"><span className="material-symbols-outlined text-primary text-sm">check_circle</span> {item}</li>
+                          <li key={i} className="flex items-center gap-2.5">
+                            <span className="material-symbols-outlined text-primary text-base shrink-0">check_circle</span>
+                            <span className="text-sm lg:text-base">{item}</span>
+                          </li>
                         ))}
                       </ul>
                     )}
                     {(card.buttonText || card.buttonLink) && (
                       <a 
-                        href={`https://wa.me/5571987203123?text=${encodeURIComponent(`Olá! Gostaria de solicitar um orçamento para ${card.title}.`)}`}
+                        href={`https://wa.me/5571987203123?text=${encodeURIComponent(`Olá! Gostaria de mais informações sobre ${card.title}.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="px-6 py-2 border border-primary text-primary hover:bg-primary hover:text-background-dark transition-all rounded font-medium font-display uppercase text-sm tracking-wider mt-4 inline-block shadow-lg shadow-primary/5"
