@@ -101,8 +101,8 @@ export default async function ContactPage() {
             {/* Contact Image Section */}
             <div className="rounded-xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 h-64 relative border border-primary/20 group">
               <Image
-                src="/images/contact-bg.png"
-                alt="Equipe de atendimento Santa Marta Engenharia"
+                src="/Equipe-Santa-Marta.jpeg"
+                alt="Equipe Santa Marta"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
