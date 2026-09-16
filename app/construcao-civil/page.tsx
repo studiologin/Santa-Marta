@@ -42,13 +42,19 @@ export default function ConstructionPage() {
     fetchData()
   }, [])
 
-  const categories = ["Todos", "Proteções Coletivas", "Geral", "Infraestrutura"]
+  const dynamicCategories = pageContent?.categories && Array.isArray(pageContent.categories)
+    ? pageContent.categories
+    : ["Proteções Coletivas", "Geral", "Infraestrutura"];
 
-  // Simulates front-end categorization based on keywords in usage_application or name
-  // Since we don't have granular subcategories in DB right now.
+  const categories = ["Todos", ...Array.from(new Set(dynamicCategories))];
+
   const filteredProducts = activeFilter === "Todos"
     ? products
     : products.filter(p => {
+      const mappedSubcat = pageContent?.product_subcategories?.[p.id] || pageContent?.product_subcategories?.[p.slug];
+      if (mappedSubcat) {
+        return mappedSubcat.toLowerCase() === activeFilter.toLowerCase();
+      }
       const text = `${p.name} ${p.usage_application}`.toLowerCase()
       if (activeFilter === "Proteções Coletivas") return text.includes("proteção") || text.includes("rede") || text.includes("tela") || text.includes("periferia")
       if (activeFilter === "Infraestrutura") return text.includes("infraestrutura") || text.includes("drenagem")

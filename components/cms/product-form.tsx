@@ -38,6 +38,8 @@ export function ProductForm({ productId }: ProductFormProps) {
         slug: "",
         description: "",
         category: categoryParam || "geossinteticos",
+        subcategory: "",
+        custom_subcategory: "",
         image_url: "",
         gallery_urls: [] as string[],
         usage_application: "",
@@ -47,6 +49,7 @@ export function ProductForm({ productId }: ProductFormProps) {
         catalog_label: "Baixar Catálogo Técnico (PDF)",
         catalog_enabled: false,
     });
+    const [availableSubcategories, setAvailableSubcategories] = useState<string[]>(["Proteções Coletivas", "Geral", "Infraestrutura"]);
 
     const generateSlug = (text: string) => {
         return text
@@ -100,6 +103,10 @@ export function ProductForm({ productId }: ProductFormProps) {
                 const product = productRes.data;
                 const pageContent = pageRes.data?.content || {};
                 const isFeatured = pageContent.featured_product_id === productId || (product.slug && pageContent.featured_product_slug === product.slug);
+                const subcats = pageContent.categories || ["Proteções Coletivas", "Geral", "Infraestrutura"];
+                setAvailableSubcategories(subcats);
+
+                const prodSubcat = pageContent.product_subcategories?.[productId] || pageContent.product_subcategories?.[product.slug] || "";
 
                 if (product) {
                     setFormData({
@@ -107,6 +114,8 @@ export function ProductForm({ productId }: ProductFormProps) {
                         slug: product.slug,
                         description: product.description || "",
                         category: product.category,
+                        subcategory: prodSubcat,
+                        custom_subcategory: "",
                         image_url: product.image_url || "",
                         gallery_urls: product.gallery_urls || [],
                         usage_application: product.usage_application || "",
@@ -132,6 +141,16 @@ export function ProductForm({ productId }: ProductFormProps) {
                 setFetching(false);
             };
             fetchProduct();
+        } else {
+            // New product case: fetch available subcategories from pages table
+            const fetchPageCategories = async () => {
+                const supabase = createClient();
+                const { data } = await supabase.from("pages").select("content").eq("slug", "construcao-civil").single();
+                if (data?.content?.categories) {
+                    setAvailableSubcategories(data.content.categories);
+                }
+            };
+            fetchPageCategories();
         }
     }, [productId, isEditing]);
 
@@ -192,7 +211,11 @@ export function ProductForm({ productId }: ProductFormProps) {
 
         const supabase = createClient();
 
-        const { is_featured, ...dbPayload } = formData;
+        const chosenSubcategory = formData.subcategory === "NEW" 
+            ? formData.custom_subcategory.trim() 
+            : formData.subcategory.trim();
+
+        const { is_featured, subcategory, custom_subcategory, ...dbPayload } = formData;
         const sheetData = technicalSheet.filter(row => row.key.trim() !== "");
 
         const payload = {
@@ -234,7 +257,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                 await supabase.from("similar_products").insert(simPayload);
             }
 
-            // Sync featured product status in pages table for construcao-civil
+            // Sync featured product status and subcategories in pages table for construcao-civil
             const { data: pageRes } = await supabase
                 .from("pages")
                 .select("content")
@@ -242,24 +265,30 @@ export function ProductForm({ productId }: ProductFormProps) {
                 .single();
 
             const currentContent = pageRes?.content || {};
+            const updatedContent: any = { ...currentContent };
 
             if (formData.is_featured) {
-                await supabase.from("pages").update({
-                    content: {
-                        ...currentContent,
-                        featured_product_id: currentId,
-                        featured_product_slug: formData.slug
-                    }
-                }).eq("slug", "construcao-civil");
+                updatedContent.featured_product_id = currentId;
+                updatedContent.featured_product_slug = formData.slug;
             } else if (currentContent.featured_product_id === currentId || currentContent.featured_product_slug === formData.slug) {
-                await supabase.from("pages").update({
-                    content: {
-                        ...currentContent,
-                        featured_product_id: null,
-                        featured_product_slug: null
-                    }
-                }).eq("slug", "construcao-civil");
+                updatedContent.featured_product_id = null;
+                updatedContent.featured_product_slug = null;
             }
+
+            if (chosenSubcategory) {
+                const currentCategories: string[] = Array.from(new Set([
+                    ...(currentContent.categories || ["Proteções Coletivas", "Geral", "Infraestrutura"]),
+                    chosenSubcategory
+                ]));
+                updatedContent.categories = currentCategories;
+                updatedContent.product_subcategories = {
+                    ...(currentContent.product_subcategories || {}),
+                    [currentId]: chosenSubcategory,
+                    [formData.slug]: chosenSubcategory
+                };
+            }
+
+            await supabase.from("pages").update({ content: updatedContent }).eq("slug", "construcao-civil");
         }
 
         router.push(`/dashboard/produtos?categoria=${formData.category}`);
@@ -534,6 +563,35 @@ export function ProductForm({ productId }: ProductFormProps) {
                                     </select>
                                     <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">expand_more</span>
                                 </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <label className="text-[10px] uppercase tracking-[0.2em] font-black text-slate-500 ml-1">Filtro / Subcategoria (Construção Civil)</label>
+                                <div className="relative">
+                                    <select
+                                        className="w-full bg-slate-950/50 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-[#cba36d]/50 outline-none appearance-none cursor-pointer font-bold text-sm"
+                                        value={formData.subcategory}
+                                        onChange={e => setFormData({ ...formData, subcategory: e.target.value })}
+                                    >
+                                        <option value="">Selecione uma subcategoria...</option>
+                                        {availableSubcategories.map(cat => (
+                                            <option key={cat} value={cat}>{cat}</option>
+                                        ))}
+                                        <option value="NEW">+ Criar Nova Subcategoria</option>
+                                    </select>
+                                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">expand_more</span>
+                                </div>
+
+                                {formData.subcategory === "NEW" && (
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Digite a nova subcategoria..."
+                                        className="w-full bg-slate-950/50 border border-[#cba36d]/40 rounded-2xl px-6 py-4 text-[#cba36d] focus:border-[#cba36d] outline-none transition-all placeholder:text-slate-600 font-bold text-sm mt-3 animate-in fade-in duration-300"
+                                        value={formData.custom_subcategory}
+                                        onChange={e => setFormData({ ...formData, custom_subcategory: e.target.value })}
+                                    />
+                                )}
                             </div>
 
                             <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/5">
