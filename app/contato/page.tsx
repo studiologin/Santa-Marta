@@ -89,8 +89,8 @@ export default async function ContactPage() {
                   </div>
                   <div>
                     <p className="text-slate-100 text-lg font-semibold font-display">Horário de Atendimento</p>
-                    <p className="text-slate-400 mt-1">Segunda a Sexta: 08:00 às 18:00</p>
-                    <p className="text-slate-400">Sábado: 09:00 às 12:00</p>
+                    <p className="text-slate-400 mt-1">Segunda a Sexta: 08:00 às 17:00</p>
+                    <p className="text-slate-400">Sábado: 08:00 às 12:00</p>
                   </div>
                 </div>
               </div>
