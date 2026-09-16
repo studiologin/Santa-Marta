@@ -56,6 +56,13 @@ export default function ConstructionPage() {
       return false;
     })
 
+  const featuredProductId = pageContent?.featured_product_id;
+  const featuredProductSlug = pageContent?.featured_product_slug;
+
+  const featuredProduct = products.find(p => p.id === featuredProductId || (p.slug && p.slug === featuredProductSlug))
+    || products.find(p => p.slug === "sistema-de-rede-piso-a-piso-teto")
+    || products[0];
+
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
 
@@ -242,48 +249,64 @@ export default function ConstructionPage() {
       </section>
 
       {/* Featured Showcase */}
-      <section className="px-4 lg:px-20 py-16">
-        <div className="bg-slate-100 dark:bg-white/5 border border-primary/10 rounded-xl overflow-hidden flex flex-col lg:flex-row items-stretch group hover:border-primary/30 transition-all duration-500">
-          <div className="lg:w-1/2 min-h-[300px] relative overflow-hidden">
-            <Image
-              src="/images/products/safety_net_construction_h_view_top_angle_1772753048463.png"
-              alt="Close up of construction site safety mesh"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          </div>
-          <div className="lg:w-1/2 p-10 flex flex-col justify-center relative">
-            <div className="absolute top-0 right-0 p-4 opacity-10">
-              <span className="material-symbols-outlined text-9xl text-primary">verified_user</span>
+      {featuredProduct && (
+        <section className="px-4 lg:px-20 py-16">
+          <div className="bg-slate-100 dark:bg-white/5 border border-primary/10 rounded-xl overflow-hidden flex flex-col lg:flex-row items-stretch group hover:border-primary/30 transition-all duration-500">
+            <div className="lg:w-1/2 min-h-[300px] relative overflow-hidden bg-slate-900 flex items-center justify-center">
+              {featuredProduct.image_url ? (
+                <Image
+                  src={featuredProduct.image_url}
+                  alt={featuredProduct.name}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <Image
+                  src="/images/products/safety_net_construction_h_view_top_angle_1772753048463.png"
+                  alt={featuredProduct.name}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              )}
             </div>
-            <span className="bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded w-fit uppercase mb-4 tracking-wider font-display">Destaque do Mês</span>
-            <h2 className="text-slate-900 dark:text-slate-100 text-3xl font-bold mb-4 font-display">Sistemas de Rede de Segurança Sub-Laje</h2>
-            <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed relative z-10">
-              Nossas redes de segurança são fabricadas com poliamida de alta tenacidade, garantindo a máxima resistência mecânica e durabilidade contra raios UV. O sistema ideal para projetos que priorizam a vida sem comprometer a agilidade da obra.
-            </p>
-            <div className="grid grid-cols-2 gap-6 mb-8 relative z-10">
-              <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary">verified</span>
-                <div>
-                  <p className="text-slate-900 dark:text-slate-100 text-sm font-bold font-display">Certificado NR-18</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Conformidade total</p>
+            <div className="lg:w-1/2 p-10 flex flex-col justify-center relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <span className="material-symbols-outlined text-9xl text-primary">verified_user</span>
+              </div>
+              <span className="bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded w-fit uppercase mb-4 tracking-wider font-display">Destaque do Mês</span>
+              <h2 className="text-slate-900 dark:text-slate-100 text-3xl font-bold mb-4 font-display">{featuredProduct.name}</h2>
+              <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed relative z-10">
+                {featuredProduct.description}
+              </p>
+              <div className="grid grid-cols-2 gap-6 mb-8 relative z-10">
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary">verified</span>
+                  <div>
+                    <p className="text-slate-900 dark:text-slate-100 text-sm font-bold font-display">Certificado NR-18</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">Conformidade total</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary">shield</span>
+                  <div>
+                    <p className="text-slate-900 dark:text-slate-100 text-sm font-bold font-display">Alta Durabilidade</p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">Resistente a intempéries</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary">shield</span>
-                <div>
-                  <p className="text-slate-900 dark:text-slate-100 text-sm font-bold font-display">Alta Durabilidade</p>
-                  <p className="text-slate-500 dark:text-slate-400 text-xs">Resistente a intempéries</p>
-                </div>
-              </div>
+              <Link
+                href={`/produtos/${featuredProduct.slug}`}
+                className="bg-primary text-[#0A192A] font-bold px-8 py-4 rounded hover:bg-primary/90 transition-all uppercase tracking-tighter text-sm w-fit font-display shadow-lg shadow-primary/20 hover:shadow-primary/40 flex items-center gap-2 group/link"
+              >
+                Ver Detalhes
+                <span className="material-symbols-outlined text-sm group-hover/link:translate-x-1 transition-transform">arrow_forward_ios</span>
+              </Link>
             </div>
-            <button className="bg-primary text-[#0A192A] font-bold px-8 py-4 rounded hover:bg-primary/90 transition-all uppercase tracking-tighter text-sm w-fit font-display shadow-lg shadow-primary/20 hover:shadow-primary/40">
-              Consultar Especialista
-            </button>
           </div>
-        </div>
-      </section >
-    </div >
+        </section>
+      )}
+    </div>
   )
 }

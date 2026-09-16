@@ -42,6 +42,7 @@ export function ProductForm({ productId }: ProductFormProps) {
         gallery_urls: [] as string[],
         usage_application: "",
         is_active: true,
+        is_featured: false,
         catalog_url: "",
         catalog_label: "Baixar Catálogo Técnico (PDF)",
         catalog_enabled: false,
@@ -77,17 +78,28 @@ export function ProductForm({ productId }: ProductFormProps) {
         if (isEditing && productId) {
             const fetchProduct = async () => {
                 const supabase = createClient();
-                const { data: product, error } = await supabase
-                    .from("products")
-                    .select("*, similar_products!product_id(similar_id)")
-                    .eq("id", productId)
-                    .single();
+                const [productRes, pageRes] = await Promise.all([
+                    supabase
+                        .from("products")
+                        .select("*, similar_products!product_id(similar_id)")
+                        .eq("id", productId)
+                        .single(),
+                    supabase
+                        .from("pages")
+                        .select("content")
+                        .eq("slug", "construcao-civil")
+                        .single()
+                ]);
 
-                if (error) {
-                    console.error("Error fetching product:", error);
+                if (productRes.error) {
+                    console.error("Error fetching product:", productRes.error);
                     setFetching(false);
                     return;
                 }
+
+                const product = productRes.data;
+                const pageContent = pageRes.data?.content || {};
+                const isFeatured = pageContent.featured_product_id === productId || (product.slug && pageContent.featured_product_slug === product.slug);
 
                 if (product) {
                     setFormData({
@@ -99,6 +111,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                         gallery_urls: product.gallery_urls || [],
                         usage_application: product.usage_application || "",
                         is_active: product.is_active,
+                        is_featured: !!isFeatured,
                         catalog_url: product.catalog_url || "",
                         catalog_label: product.catalog_label || "Baixar Catálogo Técnico (PDF)",
                         catalog_enabled: product.catalog_enabled || false,
@@ -179,10 +192,11 @@ export function ProductForm({ productId }: ProductFormProps) {
 
         const supabase = createClient();
 
+        const { is_featured, ...dbPayload } = formData;
         const sheetData = technicalSheet.filter(row => row.key.trim() !== "");
 
         const payload = {
-            ...formData,
+            ...dbPayload,
             technical_sheet: sheetData,
         };
 
@@ -218,6 +232,33 @@ export function ProductForm({ productId }: ProductFormProps) {
             if (similarIds.length > 0) {
                 const simPayload = similarIds.map(sid => ({ product_id: currentId, similar_id: sid }));
                 await supabase.from("similar_products").insert(simPayload);
+            }
+
+            // Sync featured product status in pages table for construcao-civil
+            const { data: pageRes } = await supabase
+                .from("pages")
+                .select("content")
+                .eq("slug", "construcao-civil")
+                .single();
+
+            const currentContent = pageRes?.content || {};
+
+            if (formData.is_featured) {
+                await supabase.from("pages").update({
+                    content: {
+                        ...currentContent,
+                        featured_product_id: currentId,
+                        featured_product_slug: formData.slug
+                    }
+                }).eq("slug", "construcao-civil");
+            } else if (currentContent.featured_product_id === currentId || currentContent.featured_product_slug === formData.slug) {
+                await supabase.from("pages").update({
+                    content: {
+                        ...currentContent,
+                        featured_product_id: null,
+                        featured_product_slug: null
+                    }
+                }).eq("slug", "construcao-civil");
             }
         }
 
@@ -508,6 +549,26 @@ export function ProductForm({ productId }: ProductFormProps) {
                                     <div className={cn(
                                         "w-4 h-4 bg-white rounded-full transition-transform duration-300",
                                         formData.is_active ? "translate-x-6" : "translate-x-0"
+                                    )} />
+                                </button>
+                            </div>
+
+                            <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/5">
+                                <div className="flex flex-col pr-2">
+                                    <span className="text-xs font-bold text-white uppercase tracking-widest">Produto em Destaque</span>
+                                    <span className="text-[10px] text-slate-400 mt-1">Destaque na página de Construção Civil</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setFormData({ ...formData, is_featured: !formData.is_featured })}
+                                    className={cn(
+                                        "w-12 h-6 rounded-full p-1 transition-all duration-300 shrink-0",
+                                        formData.is_featured ? "bg-[#cba36d] shadow-lg shadow-[#cba36d]/20" : "bg-slate-700"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "w-4 h-4 bg-[#0d1b2a] rounded-full transition-transform duration-300",
+                                        formData.is_featured ? "translate-x-6" : "translate-x-0"
                                     )} />
                                 </button>
                             </div>
