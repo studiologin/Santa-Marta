@@ -7,7 +7,7 @@ export const companyInfo = {
   workingHours: "Seg a Sex - 08h às 17h",
   whatsappLink: "https://wa.me/5571987203123", // Example link
   socials: {
-    instagram: "#",
+    instagram: "https://www.instagram.com/santamartaepc/",
     linkedin: "#",
     facebook: "#"
   },
