@@ -184,44 +184,53 @@ export default async function ServicesPage() {
         {/* Process Section */}
         <section className="mb-24">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-slate-100 mb-4 font-display">Nosso Fluxo de Trabalho</h3>
-            <p className="text-slate-400 max-w-2xl mx-auto">Um processo estruturado para garantir excelência em todas as etapas, desde a concepção até a operação contínua.</p>
+            <h3 className="text-3xl font-bold text-slate-100 mb-4 font-display">
+              {content.workflow_title || "Nosso Fluxo de Trabalho"}
+            </h3>
+            <p className="text-slate-400 max-w-2xl mx-auto">
+              {content.workflow_subtitle || "Da visita à obra ao suporte técnico, cuidamos de cada etapa para viabilizar as proteções coletivas que sua obra precisa."}
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
             {/* Connectors for Desktop */}
             <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 bg-slate-700 -z-10"></div>
 
-            <div className="bg-background-dark border border-slate-800 p-8 rounded-lg text-center flex flex-col items-center hover:border-primary/50 transition-colors group">
-              <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 ring-4 ring-primary/5 group-hover:bg-primary group-hover:text-background-dark transition-colors">
-                <span className="material-symbols-outlined text-3xl">architecture</span>
-              </div>
-              <h5 className="text-lg font-bold text-slate-100 mb-2 font-display">1. Concepção</h5>
-              <p className="text-slate-500 text-sm">Diagnóstico situacional e definição de diretrizes estratégicas.</p>
-            </div>
+            {(() => {
+              const defaultWorkflow = [
+                {
+                  icon: "architecture",
+                  title: "1. Projeto",
+                  description: "Visitamos a obra para avaliar suas particularidades, identificar necessidades e desenvolver as soluções de proteção coletiva adequadas a cada etapa."
+                },
+                {
+                  icon: "inventory_2",
+                  title: "2. Fornecimento",
+                  description: "Fornecemos os materiais e equipamentos necessários para executar as proteções coletivas previstas no projeto."
+                },
+                {
+                  icon: "construction",
+                  title: "3. Execução",
+                  description: "Realizamos a instalação dos materiais e equipamentos fornecidos, seguindo as orientações do projeto e as condições da obra."
+                },
+                {
+                  icon: "support_agent",
+                  title: "4. Acompanhamento",
+                  description: "Oferecemos suporte técnico para orientar o uso e a conservação das proteções coletivas, além das adequações necessárias ao avanço da obra."
+                }
+              ];
 
-            <div className="bg-background-dark border border-slate-800 p-8 rounded-lg text-center flex flex-col items-center hover:border-primary/50 transition-colors group">
-              <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 ring-4 ring-primary/5 group-hover:bg-primary group-hover:text-background-dark transition-colors">
-                <span className="material-symbols-outlined text-3xl">developer_board</span>
-              </div>
-              <h5 className="text-lg font-bold text-slate-100 mb-2 font-display">2. Engenharia</h5>
-              <p className="text-slate-500 text-sm">Cálculos técnicos e especificação de componentes de hardware.</p>
-            </div>
+              const workflowToRender = content.workflow && content.workflow.length > 0 ? content.workflow : defaultWorkflow;
 
-            <div className="bg-background-dark border border-slate-800 p-8 rounded-lg text-center flex flex-col items-center hover:border-primary/50 transition-colors group">
-              <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 ring-4 ring-primary/5 group-hover:bg-primary group-hover:text-background-dark transition-colors">
-                <span className="material-symbols-outlined text-3xl">construction</span>
-              </div>
-              <h5 className="text-lg font-bold text-slate-100 mb-2 font-display">3. Execução</h5>
-              <p className="text-slate-500 text-sm">Montagem em campo seguindo as mais rígidas normas de segurança.</p>
-            </div>
-
-            <div className="bg-background-dark border border-slate-800 p-8 rounded-lg text-center flex flex-col items-center hover:border-primary/50 transition-colors group">
-              <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 ring-4 ring-primary/5 group-hover:bg-primary group-hover:text-background-dark transition-colors">
-                <span className="material-symbols-outlined text-3xl">verified</span>
-              </div>
-              <h5 className="text-lg font-bold text-slate-100 mb-2 font-display">4. Entrega</h5>
-              <p className="text-slate-500 text-sm">Testes de aceitação (FAT/SAT) e homologação do sistema.</p>
-            </div>
+              return workflowToRender.map((stepItem: any, index: number) => (
+                <div key={index} className="bg-background-dark border border-slate-800 p-8 rounded-lg text-center flex flex-col items-center hover:border-primary/50 transition-colors group">
+                  <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-6 ring-4 ring-primary/5 group-hover:bg-primary group-hover:text-background-dark transition-colors">
+                    <span className="material-symbols-outlined text-3xl">{stepItem.icon || "check_circle"}</span>
+                  </div>
+                  <h5 className="text-lg font-bold text-slate-100 mb-2 font-display">{stepItem.title}</h5>
+                  <p className="text-slate-400 text-sm leading-relaxed">{stepItem.description}</p>
+                </div>
+              ));
+            })()}
           </div>
         </section>
 
